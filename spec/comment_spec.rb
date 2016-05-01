@@ -28,15 +28,14 @@ describe Comment do
 
   it 'can add child Comments' do
     grandchild = Comment.new(body: 'This is a grandchild', user: @user)
+    grandchild.parent = @comment
     grandchild.save!
-    grandchild.move_to_child_of(@comment)
     expect(@comment.children.size).to eq(1)
   end
 
   describe 'after having a child added' do
     before do
-      @child = Comment.create!(body: 'Child comment', user: @user)
-      @child.move_to_child_of(@comment)
+      @child = Comment.create!(body: 'Child comment', user: @user, parent: @comment)
     end
 
     it 'can be referenced by its child' do

@@ -22,9 +22,9 @@ describe 'A class that is commentable' do
     it 'also destroys its nested comments' do
       child = Comment.new(body: 'This is a child',
                           commentable: @commentable,
-                          user: @user)
+                          user: @user,
+                          parent: @comment)
       child.save!
-      child.move_to_child_of(@comment)
 
       @commentable.destroy
       expect(Comment.all).not_to include(@comment)

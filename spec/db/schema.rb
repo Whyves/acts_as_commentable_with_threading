@@ -10,12 +10,11 @@ ActiveRecord::Schema.define(version: 1) do
     t.text 'body', default: ''
     t.string 'subject', default: ''
     t.integer 'user_id', null: false
-    t.integer 'parent_id'
-    t.integer 'lft'
-    t.integer 'rgt'
+    t.string 'ancestry'
     t.timestamps
   end
 
   add_index 'comments', 'user_id'
+  add_index 'comments', 'ancestry'
   add_index 'comments', 'commentable_id'
 end

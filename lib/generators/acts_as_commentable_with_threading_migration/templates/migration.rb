@@ -7,11 +7,12 @@ class ActsAsCommentableWithThreadingMigration < ActiveRecord::Migration
       t.text :body
       t.string :subject
       t.integer :user_id, null: false
-      t.integer :parent_id, :lft, :rgt
+      t.string :ancestry
       t.timestamps
     end
 
     add_index :comments, :user_id
+    add_index :comments, :ancestry
     add_index :comments, [:commentable_id, :commentable_type]
   end
 

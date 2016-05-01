@@ -1,13 +1,4 @@
 require 'active_record'
-require 'awesome_nested_set'
-ActiveRecord::Base.class_eval do
-  include CollectiveIdea::Acts::NestedSet
-end
-
-#
-unless ActiveRecord::Base.respond_to?(:acts_as_nested_set)
-  ActiveRecord::Base.send(:include, CollectiveIdea::Acts::NestedSet::Base)
-end
 
 # ActsAsCommentableWithThreading
 module Acts #:nodoc:
@@ -46,7 +37,7 @@ module Acts #:nodoc:
     module LocalInstanceMethods
       # Helper method to display only root threads, no children/replies
       def root_comments
-        comment_threads.where(parent_id: nil)
+        comment_threads.roots
       end
 
       # Helper method to sort comments by date
