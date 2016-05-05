@@ -30,6 +30,14 @@ class Comment < ActiveRecord::Base
     children.any?
   end
 
+  def reply(text, user)
+    Comment.create \
+      commentable: commentable,
+      body: text,
+      user_id: user.id,
+      parent: self
+  end
+
   # Helper class method to lookup all comments assigned
   # to all commentable types for a given user.
   scope :find_comments_by_user, lambda { |user|

@@ -22,7 +22,7 @@ class User < ActiveRecord::Base
 end
 
 class Commentable < ActiveRecord::Base
-  acts_as_commentable
+  has_threadable_comments
 end
 
-ActiveRecord::Base.send(:include, Acts::CommentableWithThreading)
+ActiveRecord::Base.send(:include, ThreadableComments)

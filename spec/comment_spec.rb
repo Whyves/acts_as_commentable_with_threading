@@ -33,6 +33,18 @@ describe Comment do
     expect(@comment.children.size).to eq(1)
   end
 
+  it 'can be replied to' do
+    @other_user = User.create!
+
+    @comment.reply 'This is my reply', @other_user
+
+    expect(@comment.children.size).to eq(1)
+    reply = @comment.children[0]
+    expect(reply.user).to eq(@other_user)
+    expect(reply.commentable).to eq(@comment.commentable)
+  end
+
+
   describe 'after having a child added' do
     before do
       @child = Comment.create!(body: 'Child comment', user: @user, parent: @comment)

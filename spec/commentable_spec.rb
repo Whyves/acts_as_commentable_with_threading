@@ -1,22 +1,45 @@
 require File.expand_path('./spec_helper', File.dirname(__FILE__))
 
 describe 'A class that is commentable' do
+  before :each do
+    @user = User.create!
+    @commentable = Commentable.create!
+  end
+
+  it 'can be commented' do
+    @commentable.add_comment 'This is my comment', @user
+
+    last_comment = Comment.last
+    expect(last_comment.body).to eq('This is my comment')
+    expect(last_comment.commentable).to eq(@commentable)
+    expect(last_comment.user_id).to eq(@user.id)
+  end
+
   it 'can have many root comments' do
     expect(Commentable.new.comment_threads.respond_to?(:each)).to eq(true)
   end
 
   describe 'when is destroyed' do
     before :each do
-      @user = User.create!
-      @commentable = Commentable.create!
       @comment = Comment.create!(user: @user,
                                  commentable: @commentable,
                                  body: 'blargh')
     end
 
-    it 'also destroys its root comments' do
+    it 'also destroys its own root comments' do
       @commentable.destroy
       expect(Comment.all).not_to include(@comment)
+    end
+
+    it 'does not destroy other root comments' do
+      @other_commentable = Commentable.create!
+      @other_comment = Comment.create!(user: @user,
+                                 commentable: @other_commentable,
+                                 body: 'bla bla bla')
+
+      @commentable.destroy
+      expect(Comment.all).not_to include(@comment)
+      expect(Comment.find(@other_comment.id)).not_to be_nil
     end
 
     it 'also destroys its nested comments' do
@@ -34,8 +57,6 @@ describe 'A class that is commentable' do
 
   describe 'special class finders' do
     before :each do
-      @user = User.create!
-      @commentable = Commentable.create!
       @other_commentable = Commentable.create!
     end
 
@@ -89,8 +110,6 @@ describe 'A class that is commentable' do
   describe 'instance methods' do
     describe '#comments_ordered_by_submitted' do
       before :each do
-        @user = User.create!
-        @commentable = Commentable.create!
         @other_commentable = Commentable.create!
         @comment = Comment.create!(user: @user,
                                    commentable: @commentable,

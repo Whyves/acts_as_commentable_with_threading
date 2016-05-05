@@ -8,6 +8,7 @@ class ActsAsCommentableWithThreadingMigration < ActiveRecord::Migration
       t.string :subject
       t.integer :user_id, null: false
       t.string :ancestry
+      t.text :parameters
       t.timestamps
     end
 
